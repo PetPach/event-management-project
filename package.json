@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-validator": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "name": "event-management-project",
+  "version": "1.0.0",
+  "description": "Desarrollar una aplicación web que permita a los usuarios organizar y gestionar eventos. Los usuarios podrán crear eventos, registrarse para asistir a eventos, gestionar la lista de asistentes y recibir notificaciones de eventos. El sistema deberá permitir la gestión de diferentes tipos de eventos (conferencias, talleres, reuniones) y ofrecer una interfaz intuitiva para los organizadores y asistentes.",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
