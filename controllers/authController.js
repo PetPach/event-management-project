@@ -13,24 +13,16 @@ const registerUser = async (req, res) => {
         }
 
         user = new User({ username, email, password });
-
         user.password = await bcryptService.hashPassword(password);
-
         await user.save();
 
-        const payload = {
-            user: {
-                id: user.id,
-                role: user.role
-            }
-        };
-
+        const payload = { user: { id: user.id, role: user.role } };
         const token = jwtService.generateToken(payload);
-        res.json({ token });
 
+        res.json({ token });
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Error en el servidor');
+        console.error('Error registrando usuario:', err);
+        res.status(500).json({ msg: 'Error en el servidor, intente nuevamente más tarde.' });
     }
 };
 
@@ -40,27 +32,21 @@ const loginUser = async (req, res) => {
 
         let user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ msg: 'Credenciales inválidas' });
+            return res.status(400).json({ msg: 'Credenciales inválidas: el usuario no existe.' });
         }
 
         const isMatch = await bcryptService.comparePassword(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ msg: 'Credenciales inválidas' });
+            return res.status(400).json({ msg: 'Credenciales inválidas: contraseña incorrecta.' });
         }
 
-        const payload = {
-            user: {
-                id: user.id,
-                role: user.role
-            }
-        };
-
+        const payload = { user: { id: user.id, role: user.role } };
         const token = jwtService.generateToken(payload);
-        res.json({ token });
 
+        res.json({ token });
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Error en el servidor');
+        console.error('Error al iniciar sesión:', err);
+        res.status(500).json({ msg: 'Error en el servidor, intente nuevamente más tarde.' });
     }
 };
 

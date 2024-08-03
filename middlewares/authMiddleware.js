@@ -1,18 +1,30 @@
 const jwtService = require('../services/jwtService');
 
 const authMiddleware = (req, res, next) => {
-    const token = req.header('Authorization').replace('Bearer ', '');
+    // Obtén el token del encabezado de autorización
+    const authHeader = req.header('Authorization');
+    if (!authHeader) {
+        return res.status(401).json({ msg: 'No token provided, authorization denied' });
+    }
+
+    // Verifica que el formato del token sea correcto
+    const token = authHeader.replace('Bearer ', '');
     if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
+        return res.status(401).json({ msg: 'Token format is invalid, authorization denied' });
     }
 
-    const decoded = jwtService.verifyToken(token);
-    if (!decoded) {
-        return res.status(401).json({ msg: 'Token is not valid' });
+    // Verificación del token
+    try {
+        const decoded = jwtService.verifyToken(token);
+        if (!decoded) {
+            return res.status(401).json({ msg: 'Token is not valid' });
+        }
+        req.user = decoded.user;
+        next();
+    } catch (error) {
+        console.error('Error verifying token:', error);
+        res.status(401).json({ msg: 'Token verification failed, authorization denied' });
     }
-
-    req.user = decoded.user;
-    next();
 };
 
 module.exports = authMiddleware;
